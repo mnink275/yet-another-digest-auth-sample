@@ -3,7 +3,7 @@ project(pg_service_template CXX)
 
 
 # Adding userver dependency
-find_package(userver COMPONENTS core postgresql QUIET)
+# find_package(userver COMPONENTS core postgresql)
 if(NOT userver_FOUND)  # Fallback to subdirectory usage
     # Enable userver libraries that are needed in this project
     set(USERVER_FEATURE_POSTGRESQL ON CACHE BOOL "" FORCE)
@@ -26,8 +26,11 @@ userver_setup_environment()
 
 # Common sources
 add_library(${PROJECT_NAME}_objs OBJECT
-    src/hello.hpp
-    src/hello.cpp
+    src/user_info.hpp
+    src/auth_digest.hpp
+    src/auth_digest.cpp
+    src/auth_digest.cpp
+    src/queries.hpp
 )
 target_link_libraries(${PROJECT_NAME}_objs PUBLIC userver::postgresql)
 
@@ -37,20 +40,20 @@ add_executable(${PROJECT_NAME} src/main.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_objs)
 
 
-# Unit Tests
-add_executable(${PROJECT_NAME}_unittest
-    src/hello_test.cpp
-)
-target_link_libraries(${PROJECT_NAME}_unittest PRIVATE ${PROJECT_NAME}_objs userver::utest)
-add_google_tests(${PROJECT_NAME}_unittest)
+# # Unit Tests
+# add_executable(${PROJECT_NAME}_unittest
+#     src/hello_test.cpp
+# )
+# target_link_libraries(${PROJECT_NAME}_unittest PRIVATE ${PROJECT_NAME}_objs userver::utest)
+# add_google_tests(${PROJECT_NAME}_unittest)
 
 
-# Benchmarks
-add_executable(${PROJECT_NAME}_benchmark
-    src/hello_benchmark.cpp
-)
-target_link_libraries(${PROJECT_NAME}_benchmark PRIVATE ${PROJECT_NAME}_objs userver::ubench)
-add_google_benchmark_tests(${PROJECT_NAME}_benchmark)
+# # Benchmarks
+# add_executable(${PROJECT_NAME}_benchmark
+#     src/hello_benchmark.cpp
+# )
+# target_link_libraries(${PROJECT_NAME}_benchmark PRIVATE ${PROJECT_NAME}_objs userver::ubench)
+# add_google_benchmark_tests(${PROJECT_NAME}_benchmark)
 
 
 # Functional Tests
